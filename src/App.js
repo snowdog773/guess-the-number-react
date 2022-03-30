@@ -59,6 +59,9 @@ class App extends Component {
     if (num === this.state.target) {
       this.setState({ message: "game won" });
       setTimeout(() => this.setState({ difficulty: "", attempts: [] }), 1000);
+    } else if (this.attemptsRemaining === 1) {
+      this.setState({ message: "game over" });
+      setTimeout(() => this.setState({ difficulty: "", attempts: [] }), 1000);
     } else if (num < this.state.lower || num > this.state.upper) {
       this.setState({ message: "out of bounds" });
     } else if (num < this.state.target) {
@@ -66,14 +69,19 @@ class App extends Component {
     } else if (num > this.state.target) {
       this.setState({ message: "too high" });
     }
-    if (this.attemptsRemaining === 0) {
-      this.setState({ message: "game over" });
-      setTimeout(() => this.setState({ difficulty: "", attempts: [] }), 1000);
-    }
   }
 
   help() {
-    console.log("help");
+    const lastGuess = this.state.attempts.at(-1);
+
+    if (isNaN(lastGuess))
+      this.setState({ message: "You need to make a guess first." });
+    else
+      this.setState({
+        message: `Last guess was within ${
+          Math.ceil(Math.abs(this.state.target - lastGuess) / 10) * 10
+        } of the target.`,
+      });
   }
 
   render() {
@@ -83,7 +91,7 @@ class App extends Component {
         <View
           initGame={({ target: button }) => this.initGame(button.value)}
           lower={this.state.lower}
-          higher={this.state.higher}
+          upper={this.state.upper}
           attempts={this.attemptsRemaining}
           help={() => this.help()}
           guess={() => this.guess(this.state.guess)}

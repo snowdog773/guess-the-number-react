@@ -3,8 +3,7 @@ export default function View(props) {
     return (
       <>
         <h2>
-          Guess the number between {props.lower} and {props.upper} in
-          {props.attempts} tries.
+          {`Guess the number between ${props.lower} and ${props.upper} in ${props.attempts} tries.`}
         </h2>
 
         <input onChange={props.onInput} type="number" />
